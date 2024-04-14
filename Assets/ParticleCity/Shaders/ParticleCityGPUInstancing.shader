@@ -57,6 +57,7 @@ Shader "Particle City/Particle City GPU Instancing"
                     float4 vertex   : POSITION;
                     float2 uvPoint  : TEXCOORD0;
                     float2 uvSprite : TEXCOORD1;
+
                     UNITY_VERTEX_INPUT_INSTANCE_ID
                 };
 
@@ -65,6 +66,8 @@ Shader "Particle City/Particle City GPU Instancing"
                     float4  pos      : POSITION;
                     float4  color    : COLOR0;
                     float2  uvSprite : TEXCOORD0;
+
+                    UNITY_VERTEX_OUTPUT_STEREO
                 };
 
 
@@ -148,9 +151,11 @@ Shader "Particle City/Particle City GPU Instancing"
                 // Vertex Shader ------------------------------------------------
                 FS_INPUT VS_Main(VS_INPUT v)
                 {
-                    UNITY_SETUP_INSTANCE_ID(v);
-
                     FS_INPUT output = (FS_INPUT)0;
+
+                    UNITY_SETUP_INSTANCE_ID(v);
+                    UNITY_INITIALIZE_OUTPUT(FS_INPUT, output);
+                    UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output); 
 
                     float rowOffset = UNITY_ACCESS_INSTANCED_PROP(Props, _InstancingRowOffset);
                     float4 lodCoord = float4(v.uvPoint.x, v.uvPoint.y + rowOffset, 0, 0);
@@ -210,7 +215,7 @@ Shader "Particle City/Particle City GPU Instancing"
                 // Fragment Shader -----------------------------------------------
                 float4 FS_Main(FS_INPUT input) : COLOR
                 {
-                    float4 c = _SpriteTex.Sample(sampler_SpriteTex, input.uvSprite);
+                    float4 c =   _SpriteTex.Sample(sampler_SpriteTex, input.uvSprite);
                     c *= input.color;
 
 #if !defined(UNITY_COLORSPACE_GAMMA)
