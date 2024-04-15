@@ -16,7 +16,7 @@ public class HandGestureManager : MonoBehaviour
 
     private readonly Dictionary<Handedness, HandGesture> m_HandGestures = new();
 
-    private const float PINCH_DIST = 0.05f;
+    private const float PINCH_DIST = 0.01f;
 
     public UnityEvent<Handedness, HandGesture, HandGesture> OnHandGestureChanged;
 
@@ -26,25 +26,50 @@ public class HandGestureManager : MonoBehaviour
         m_HandGestures.Add(Handedness.Right, HandGesture.NotTracked);
     }
 
-    public void OnTrackingAcquired(Handedness handedness)
+    public void OnTrackingAcquired_Left()
+    {
+        OnTrackingAcquired(Handedness.Left);
+    }
+
+    public void OnTrackingAcquired_Right()
+    {
+        OnTrackingAcquired(Handedness.Right);
+    }
+
+    private void OnTrackingAcquired(Handedness handedness)
     {
         OnHandGestureChangedInternal(handedness, HandGesture.None);
     }
 
-    public void OnTrackingLost(Handedness handedness)
+    public void OnTrackingLost_Left()
+    {
+        OnTrackingLost(Handedness.Left);
+    }
+
+    public void OnTrackingLost_Right()
+    {
+        OnTrackingLost(Handedness.Right);
+    }
+
+    private void OnTrackingLost(Handedness handedness)
     {
         OnHandGestureChangedInternal(handedness, HandGesture.NotTracked);
     }
 
-    public void OnUpdatedHand(Hand hand)
+    public void OnJointsUpdated(XRHandJointsUpdatedEventArgs args)
+    {
+        OnUpdatedHand(args.hand);
+    }
+
+    private void OnUpdatedHand(XRHand hand)
     {
         if (ValidateHandGesture_Pinching(hand))
         {
-            OnHandGestureChangedInternal(hand.Handedness, HandGesture.Pinching);
+            OnHandGestureChangedInternal(hand.handedness, HandGesture.Pinching);
             return;
         }
 
-        OnHandGestureChangedInternal(hand.Handedness, HandGesture.None);
+        OnHandGestureChangedInternal(hand.handedness, HandGesture.None);
     }
 
     private void OnHandGestureChangedInternal(Handedness handedness, HandGesture handGesture)
@@ -57,11 +82,13 @@ public class HandGestureManager : MonoBehaviour
         OnHandGestureChanged?.Invoke(handedness, prevGesture, handGesture);
     }
 
-    private bool ValidateHandGesture_Pinching(Hand hand)
+    private bool ValidateHandGesture_Pinching(XRHand hand)
     {
-        var thumbTip = hand.GetHandJointPose(XRHandJointID.ThumbTip);
-        var indexTip = hand.GetHandJointPose(XRHandJointID.IndexTip);
+        if (hand.GetJoint(XRHandJointID.ThumbTip).TryGetPose(out var thumbTipPose) && hand.GetJoint(XRHandJointID.IndexTip).TryGetPose(out var indexTipPose))
+        {
+            return Vector3.Distance(thumbTipPose.position, indexTipPose.position) < PINCH_DIST;
+        }
 
-        return Vector3.Distance(thumbTip.position, indexTip.position) < PINCH_DIST;
+        return false;
     }
 }

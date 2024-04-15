@@ -25,7 +25,8 @@ public class Hand : MonoBehaviour
     public void SetHandJointPose(XRHandJointID handJointID, Pose pose)
     {
         int handJointIndex = HandJointID2Index(handJointID);
-        m_HandJoints[handJointIndex].SetPositionAndRotation(pose.position, pose.rotation);
+        m_HandJoints[handJointIndex].position = pose.position;
+        m_HandJoints[handJointIndex].rotation = pose.rotation;
     }
 
     private int HandJointID2Index(XRHandJointID handJointID)

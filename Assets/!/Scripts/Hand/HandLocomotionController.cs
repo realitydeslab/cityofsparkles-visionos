@@ -5,7 +5,15 @@ public class HandLocomotionController : MonoBehaviour
 {
     [SerializeField] private HandGestureManager m_HandGestureManager;
 
-    [SerializeField] private HandTrackingManager m_HandTrackingManager;
+    [SerializeField] private Transform m_XROrigin;
+
+    [SerializeField] private Transform m_LeftThumbMetacarpal;
+
+    [SerializeField] private Transform m_LeftIndexProximal;
+
+    [SerializeField] private Transform m_RightThumbMetacarpal;
+
+    [SerializeField] private Transform m_RightIndexProximal;
 
     [SerializeField] private float m_Acceleration = 2f;
 
@@ -27,6 +35,7 @@ public class HandLocomotionController : MonoBehaviour
             // Start flying
             m_DirectionHandedness = oppositeHandedness;
             m_IsFlying = true;
+            Debug.Log("Start flying");
             return;
         }
 
@@ -35,6 +44,7 @@ public class HandLocomotionController : MonoBehaviour
             // Stop flying
             m_DirectionHandedness = Handedness.Invalid;
             m_IsFlying = false;
+            Debug.Log("Stop flying");
             return;
         }
     }
@@ -42,6 +52,9 @@ public class HandLocomotionController : MonoBehaviour
     private void Update()
     {
         if (!m_IsFlying)
+            return;
+
+        if (m_HandGestureManager.HandGestures[m_DirectionHandedness] == HandGesture.NotTracked)
             return;
 
         UpdateDirection();
@@ -54,14 +67,18 @@ public class HandLocomotionController : MonoBehaviour
         }
 
         // Update position
-        transform.position += m_Speed * Time.time * m_Direction;
+        m_XROrigin.position += m_Speed * Time.time * m_Direction;
     }
 
     private void UpdateDirection()
     {
-        var thumbMetacarpal = m_HandTrackingManager.Hands[m_DirectionHandedness].GetHandJointPose(XRHandJointID.ThumbMetacarpal);
-        var indexMetacarpal = m_HandTrackingManager.Hands[m_DirectionHandedness].GetHandJointPose(XRHandJointID.IndexMetacarpal);
-
-        m_Direction = (indexMetacarpal.position - thumbMetacarpal.position).normalized;
+        if (m_DirectionHandedness == Handedness.Left)
+        {
+            m_Direction = (m_LeftIndexProximal.position - m_LeftThumbMetacarpal.position).normalized;
+        }
+        else if (m_DirectionHandedness == Handedness.Right)
+        {
+            m_Direction = (m_RightIndexProximal.position - m_RightThumbMetacarpal.position).normalized;
+        }
     }
 }

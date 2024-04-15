@@ -5,17 +5,13 @@ using UnityEngine.XR.Hands;
 
 public class HandTrackingManager : MonoBehaviour
 {
+    [SerializeField] private Transform m_XRRig;
+
     [SerializeField] private Hand m_LeftHand;
 
     [SerializeField] private Hand m_RightHand;
 
     [SerializeField] private bool m_HandJointsVisibility = true;
-
-    // True if the left hand is currently detected
-    public bool HasLeftHand => m_LeftHand.gameObject.activeSelf;
-
-    // True if the right hand is currently detected
-    public bool HasRightHand => m_RightHand.gameObject.activeSelf;
 
     public Dictionary<Handedness, Hand> Hands => m_Hands;
 
@@ -119,7 +115,7 @@ public class HandTrackingManager : MonoBehaviour
                 XRHandJoint handJoint = hand.GetJoint(handJointID);
                 if (handJoint.TryGetPose(out var handJointPose))
                 {
-                    m_Hands[handedness].SetHandJointPose(handJointID, handJointPose);
+                    m_Hands[handedness].SetHandJointPose(handJointID, handJointPose.GetTransformedBy(new Pose(m_XRRig.position, m_XRRig.rotation)));
                 }
             }
             OnUpdatedHand?.Invoke(m_Hands[handedness]);
@@ -135,10 +131,15 @@ public class HandTrackingManager : MonoBehaviour
                 XRHandJoint handJoint = hand.GetJoint(handJointID);
                 if (handJoint.TryGetPose(out var handJointPose))
                 {
-                    m_Hands[handedness].SetHandJointPose(handJointID, handJointPose);
+                    m_Hands[handedness].SetHandJointPose(handJointID, handJointPose.GetTransformedBy(new Pose(m_XRRig.position, m_XRRig.rotation)));
                 }
             }
             OnUpdatedHand?.Invoke(m_Hands[handedness]);
         }
+    }
+
+    public bool IsHandAvailable(Handedness handedness)
+    {
+        return m_Hands[handedness].gameObject.activeSelf;
     }
 }
