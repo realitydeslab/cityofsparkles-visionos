@@ -376,8 +376,8 @@ MonoBehaviour:
   m_LeftIndexProximal: {fileID: 545105676}
   m_RightThumbMetacarpal: {fileID: 1390377339}
   m_RightIndexProximal: {fileID: 1390377338}
-  m_Acceleration: 0.00002
-  m_MaxSpeed: 0.0005
+  m_Acceleration: 1
+  m_MaxSpeed: 1
 --- !u!4 &645785606
 Transform:
   m_ObjectHideFlags: 0

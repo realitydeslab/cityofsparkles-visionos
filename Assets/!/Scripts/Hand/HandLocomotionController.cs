@@ -15,9 +15,9 @@ public class HandLocomotionController : MonoBehaviour
 
     [SerializeField] private Transform m_RightIndexProximal;
 
-    [SerializeField] private float m_Acceleration = 2f;
+    [SerializeField] private float m_Acceleration = 1f;
 
-    [SerializeField] private float m_MaxSpeed = 10f;
+    [SerializeField] private float m_MaxSpeed = 1f;
 
     private bool m_IsFlying = false;
 
@@ -44,6 +44,7 @@ public class HandLocomotionController : MonoBehaviour
             // Stop flying
             m_DirectionHandedness = Handedness.Invalid;
             m_IsFlying = false;
+            m_Speed = 0f;
             Debug.Log("Stop flying");
             return;
         }
@@ -67,7 +68,7 @@ public class HandLocomotionController : MonoBehaviour
         }
 
         // Update position
-        m_XROrigin.position += m_Speed * Time.time * m_Direction;
+        m_XROrigin.position += m_Direction * m_Speed * Time.deltaTime;
     }
 
     private void UpdateDirection()

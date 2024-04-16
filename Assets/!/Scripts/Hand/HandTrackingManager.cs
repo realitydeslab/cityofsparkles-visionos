@@ -104,7 +104,7 @@ public class HandTrackingManager : MonoBehaviour
 
     private void OnUpdatedHandsInternal(XRHandSubsystem subsystem, XRHandSubsystem.UpdateSuccessFlags updateSuccessFlags, XRHandSubsystem.UpdateType updateType)
     {
-        Handedness handedness = Handedness.Invalid;
+        Handedness handedness;
         if ((updateSuccessFlags & XRHandSubsystem.UpdateSuccessFlags.LeftHandJoints) != 0)
         {
             handedness = Handedness.Left;
