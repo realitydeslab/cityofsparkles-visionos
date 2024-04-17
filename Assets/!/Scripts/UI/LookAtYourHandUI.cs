@@ -19,15 +19,22 @@ public class LookAtYourHandUI : MonoBehaviour
 
     private CanvasRenderer m_TextCanvasRenderer;
 
-    private void Start()
+    private void Awake()
     {
         m_LazyFollow = GetComponent<LazyFollow>();
+#if UNITY_EDITOR
+        m_LazyFollow.enabled = false;
+#endif
 
         m_TextCanvasRenderer = GetComponentInChildren<CanvasRenderer>();
     }
 
     private void Update()
     {
+#if UNITY_EDITOR
+        return;
+#endif
+
         if (m_LazyFollow.target == null)
         {
             m_LazyFollow.target = Camera.main.transform;

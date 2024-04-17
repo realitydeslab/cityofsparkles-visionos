@@ -43,10 +43,12 @@ Shader "Particle City/Particle City"
             // color = src.a * src + 1 * dst
         
             CGPROGRAM
-                #pragma target 5.0
+                #pragma target 3.5
                 #pragma vertex VS_Main
                 #pragma fragment FS_Main
+                #if METAL_SUPPORTED_GEOMETRY_SHADER
                 #pragma geometry GS_Main
+                #endif
                 #include "UnityCG.cginc" 
 
                 // **************************************************************
