@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{A8140ED5-9ADE-4891-8719-9F2E929C1763}" SchemaVersion="119">
 	<AudioObjects>
-		<WorkUnit Name="Default Work Unit" ID="{A8140ED5-9ADE-4891-8719-9F2E929C1763}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{A8140ED5-9ADE-4891-8719-9F2E929C1763}" PersistMode="Standalone">
+			<ChildrenList>
+				<Sound Name="blue piano" ID="{18A10607-375B-4234-A138-C803DE69A2E3}" ShortID="377959526">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="1"/>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{1A7F4F42-F7AB-4431-B793-2E13A647AF15}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{B8CE8574-1677-4470-B024-B0F2D45F8B7A}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="blue piano - Copy" ID="{5321A96F-9EAB-47F5-B562-3251A90A246B}">
+							<Language>SFX</Language>
+							<AudioFile>blue piano - Copy.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="414436775"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="blue piano - Copy" ID="{5321A96F-9EAB-47F5-B562-3251A90A246B}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+			</ChildrenList>
+		</WorkUnit>
 	</AudioObjects>
 </WwiseDocument>

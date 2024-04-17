@@ -12,7 +12,7 @@
   <ShowSpatialAudioWarningMsg>true</ShowSpatialAudioWarningMsg>
   <WwiseInstallationPathMac>/Applications/Audiokinetic/Wwise 2023.1.2.8444/Wwise.app</WwiseInstallationPathMac>
   <WwiseInstallationPathWindows />
-  <WwiseProjectPath>../cityofsparkles-visionos_WwiseProject/cityofsparkles-visionos_WwiseProject.wproj</WwiseProjectPath>
+  <WwiseProjectPath>../../cityofsparkles-visionos/cityofsparkles-visionos_WwiseProject/cityofsparkles-visionos_WwiseProject.wproj</WwiseProjectPath>
   <UseWaapi>true</UseWaapi>
   <WaapiPort>8080</WaapiPort>
   <WaapiIP>127.0.0.1</WaapiIP>

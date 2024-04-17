@@ -56,7 +56,7 @@ Shader "Particle City/Particle City No GS"
                     float2 uvPoint  : TEXCOORD0;
                     float2 uvSprite : TEXCOORD1;
 
-UNITY_VERTEX_INPUT_INSTANCE_ID
+                    UNITY_VERTEX_INPUT_INSTANCE_ID // Insert  
                 };
 
                 struct FS_INPUT
@@ -65,7 +65,7 @@ UNITY_VERTEX_INPUT_INSTANCE_ID
                     float4  color    : COLOR0;
                     float2  uvSprite : TEXCOORD0;
 
-                    UNITY_VERTEX_OUTPUT_STEREO
+                    UNITY_VERTEX_OUTPUT_STEREO //Insert
                 };
 
 
@@ -146,11 +146,9 @@ UNITY_VERTEX_INPUT_INSTANCE_ID
                 {
                     FS_INPUT output = (FS_INPUT)0;
 
-
                     UNITY_SETUP_INSTANCE_ID(v);
                     UNITY_INITIALIZE_OUTPUT(FS_INPUT, output);
                     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
-
 
                     float4 lodCoord = float4(v.uvPoint, 0, 0);
 
@@ -206,10 +204,16 @@ UNITY_VERTEX_INPUT_INSTANCE_ID
                     return output;
                 }
 
+                UNITY_DECLARE_SCREENSPACE_TEXTURE(_MainTex); //Insert
+
                 // Fragment Shader -----------------------------------------------
                 float4 FS_Main(FS_INPUT input) : COLOR
                 {
-                    float4 c = _SpriteTex.Sample(sampler_SpriteTex, input.uvSprite);
+                    UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input); //Insert
+
+                    fixed4 c = UNITY_SAMPLE_SCREENSPACE_TEXTURE(sampler_SpriteTex, input.uvSprite); //Insert
+    
+                    //float4 c = _SpriteTex.Sample(sampler_SpriteTex, input.uvSprite);
                     c *= input.color;
 
 #if !defined(UNITY_COLORSPACE_GAMMA)

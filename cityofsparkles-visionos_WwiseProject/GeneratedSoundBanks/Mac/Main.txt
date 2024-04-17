@@ -1,0 +1,6 @@
+Event	ID	Name			Wwise Object Path	Notes
+	2723693672	Play_blue_piano			\Default Work Unit\Play_blue_piano	
+
+In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	414436775	blue piano	Y:\Projects\unity-projects\cityofsparkles-visionos\cityofsparkles-visionos_WwiseProject\.cache\Mac\SFX\blue piano - Copy_818F3B66.wem		\Actor-Mixer Hierarchy\Default Work Unit\blue piano		16934496
+

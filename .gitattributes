@@ -1,1 +1,4 @@
 *.asset filter=lfs diff=lfs merge=lfs -text
+Assets/Wwise/API/Runtime/Plugins/VisionOS/Debug/libAkSoundEngine.a filter=lfs diff=lfs merge=lfs -text
+Assets/Wwise/API/Runtime/Plugins/VisionOS/Profile/libAkSoundEngine.a filter=lfs diff=lfs merge=lfs -text
+Assets/Wwise/API/Runtime/Plugins/VisionOS/Release/libAkSoundEngine.a filter=lfs diff=lfs merge=lfs -text
