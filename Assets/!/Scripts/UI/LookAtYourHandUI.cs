@@ -5,13 +5,25 @@ using UnityEngine.XR.Hands;
 [RequireComponent(typeof(LazyFollow))]
 public class LookAtYourHandUI : MonoBehaviour
 {
+    [SerializeField] private float m_FadeDuration = 1f;
+
+    [SerializeField] private float m_Delay = 2f;
+
     private LazyFollow m_LazyFollow;
 
     private bool m_Registered = false;
 
+    private bool m_IsLeftHandTracked = false;
+
+    private bool m_IsRightHandTracked = false;
+
+    private CanvasRenderer m_TextCanvasRenderer;
+
     private void Start()
     {
         m_LazyFollow = GetComponent<LazyFollow>();
+
+        m_TextCanvasRenderer = GetComponentInChildren<CanvasRenderer>();
     }
 
     private void Update()
@@ -68,21 +80,53 @@ public class LookAtYourHandUI : MonoBehaviour
 
     private void OnTrackingAcquired_Left()
     {
-        Debug.Log("cc: OnTrackingAcquired_Left");
+        m_IsLeftHandTracked = true;
+        OnHandTrackingUpdated();
     }
 
     private void OnTrackingAcquired_Right()
     {
-        Debug.Log("cc: OnTrackingAcquired_Right");
+        m_IsRightHandTracked = true;
+        OnHandTrackingUpdated();
     }
 
     private void OnTrackingLost_Left()
     {
-        Debug.Log("cc: OnTrackingLost_Left");
+        m_IsLeftHandTracked = false;
+        OnHandTrackingUpdated();
     }
 
     private void OnTrackingLost_Right()
     {
-        Debug.Log("cc: OnTrackingLost_Right");
+        m_IsRightHandTracked = false;
+        OnHandTrackingUpdated();
+    }
+
+    private void OnHandTrackingUpdated()
+    {
+        if (!m_IsLeftHandTracked && !m_IsRightHandTracked && m_TextCanvasRenderer.GetAlpha() != 1f)
+        {
+            // Gradually appear
+            float duration = m_FadeDuration * (1f - m_TextCanvasRenderer.GetAlpha());
+            LeanTween.cancel(gameObject);
+            LeanTween.value(gameObject, m_TextCanvasRenderer.GetAlpha(), 1f, duration)
+                .setDelay(m_Delay)
+                .setOnUpdate((float alpha) =>
+                {
+                    m_TextCanvasRenderer.SetAlpha(alpha);
+                });
+        }
+        else if (m_TextCanvasRenderer.GetAlpha() != 0f)
+        {
+            // Gradually disappear
+            float duration = m_FadeDuration * m_TextCanvasRenderer.GetAlpha();
+            LeanTween.cancel(gameObject);
+            LeanTween.value(gameObject, m_TextCanvasRenderer.GetAlpha(), 0f, duration)
+                //.setDelay(m_Delay)
+                .setOnUpdate((float alpha) =>
+                {
+                    m_TextCanvasRenderer.SetAlpha(alpha);
+                });
+        }
     }
 }
