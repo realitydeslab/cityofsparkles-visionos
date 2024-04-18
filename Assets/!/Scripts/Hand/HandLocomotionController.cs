@@ -19,6 +19,17 @@ public class HandLocomotionController : MonoBehaviour
 
     [SerializeField] private float m_MaxSpeed = 1f;
 
+    public bool IsActive
+    {
+        get => m_IsActive;
+        set
+        {
+            m_IsActive = value;
+        }
+    }
+
+    private bool m_IsActive = false;
+
     private bool m_IsFlying = false;
 
     private Handedness m_DirectionHandedness;
@@ -52,6 +63,9 @@ public class HandLocomotionController : MonoBehaviour
 
     private void Update()
     {
+        if (!m_IsActive)
+            return;
+
         if (!m_IsFlying)
             return;
 
