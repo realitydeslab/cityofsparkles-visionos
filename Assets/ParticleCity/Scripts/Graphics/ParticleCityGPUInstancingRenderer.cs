@@ -29,15 +29,15 @@ public class ParticleCityGPUInstancingRenderer : MonoBehaviour
         materialPropertyBlock = new MaterialPropertyBlock();
         materialPropertyBlock.SetFloatArray("_InstancingRowOffset", offsets);
 
-        Camera.onPreCull -= drawWithCamera;
-        Camera.onPreCull += drawWithCamera;
+        RenderPipelineManager.beginCameraRendering -= drawWithCamera;
+        RenderPipelineManager.beginCameraRendering += drawWithCamera;
     }
  
     void OnDisable() {
-        Camera.onPreCull -= drawWithCamera;
+        RenderPipelineManager.beginCameraRendering -= drawWithCamera;
     }
 
-    private void drawWithCamera(Camera camera)
+    private void drawWithCamera(ScriptableRenderContext context, Camera camera)
     { 
         if (Mesh == null || PositionTexture == null || GenParams == null)
         {

@@ -63,7 +63,7 @@ PluginImporter:
   - first:
       VisionOS: VisionOS
     second:
-      enabled: 0
+      enabled: 1
       settings:
         AddToEmbeddedBinaries: false
         CPU: ARM64
