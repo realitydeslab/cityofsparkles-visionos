@@ -28,15 +28,14 @@ Shader "Particle City/Particle City URP GPU Instancing"
         Tags
         {
             "RenderType" = "Transparent"
-            "Queue" = "Transparent"
             "RenderPipeline" = "UniversalPipeline"
         }
 
-        Cull Off
-        Lighting Off
-        ZWrite Off
-        ZTest Off
-        Blend SrcAlpha One
+       // Cull Off
+       // Lighting Off
+       // ZWrite Off
+       // ZTest Off
+       // Blend SrcAlpha One
 
         //Blend SrcAlpha OneMinusSrcAlpha
         //ZWrite Off
@@ -44,11 +43,21 @@ Shader "Particle City/Particle City URP GPU Instancing"
 
         Pass
         {
+
+            Cull Off
+            Lighting Off
+            ZWrite Off
+            ZTest Off
+            // Blend One OneMinusSrcAlpha
+            // color = 1 * src + (1 - src.a) * dst
+            Blend SrcAlpha One
+
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "HLSLSupport.cginc"
 
             struct Attributes
             {
@@ -61,7 +70,7 @@ Shader "Particle City/Particle City URP GPU Instancing"
 
             struct Varyings
             {
-                float4 position : SV_POSITION;
+                float4 pos : SV_POSITION;
                 float4 color : COLOR0;
                 float2 uvSprite : TEXCOORD0;
 
@@ -72,6 +81,17 @@ Shader "Particle City/Particle City URP GPU Instancing"
             float4x4 _VP;
 
             TEXTURE2D(_SpriteTex);
+            SAMPLER(sampler_SpriteTex);
+
+            sampler2D _PositionTex;
+            sampler2D _PositionTex2;
+            sampler2D _OffsetTex;
+            sampler2D _NoiseTex;
+            sampler2D _ColorPalleteTex;
+
+            CBUFFER_START(UnityPerMaterial)
+
+            float4 _SpriteTex_ST;
             float4 _SpriteColor;
             float _GlobalIntensity;
             float _VolumeDeltaHeight;
@@ -81,23 +101,18 @@ Shader "Particle City/Particle City URP GPU Instancing"
             float _Reflection;
             float _SizeOverHeightLower;
             float _SizeOverHeightUpper;
+            float4 _NoiseTex_ST;
 
             float _MinHeight;
             float _MaxHeight;
 
-            SAMPLER(sampler_SpriteTex);
-
-            sampler2D _PositionTex;
-            sampler2D _PositionTex2;
-            sampler2D _OffsetTex;
-            sampler2D _NoiseTex;
-            float4 _NoiseTex_ST;
-            sampler2D _ColorPalleteTex;
-
+            CBUFFER_END
 
 
             UNITY_INSTANCING_BUFFER_START(Props)
+
             UNITY_DEFINE_INSTANCED_PROP(float, _InstancingRowOffset)
+
             UNITY_INSTANCING_BUFFER_END(Props)
 
 
@@ -130,24 +145,26 @@ Shader "Particle City/Particle City URP GPU Instancing"
                 float2 uvOffset = uvSprite * 2 - 1;
 
                 float4 newPos = float4(worldPos + uvOffset.x * halfS * right + uvOffset.y * halfS * up, 1.0f);
-                float4x4 vp = UnityObjectToClipPos(unity_WorldToObject);
+                float4x4 vp = mul(UNITY_MATRIX_MVP, unity_WorldToObject);
+
                 newPos = mul(vp, newPos);
 
                 return newPos;
             }
 
             // Vertex Shader
-            Varyings vert(Attributes IN)
+            Varyings vert(Attributes input)
             {
                 Varyings output = (Varyings)0;
 
-                UNITY_SETUP_INSTANCE_ID(IN);
-                UNITY_INITIALIZE_OUTPUT(Varyings, output);
+                UNITY_SETUP_INSTANCE_ID(input);
+                UNITY_INITIALIZE_OUTPUT(Varyings, output); 
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
                 float rowOffset = UNITY_ACCESS_INSTANCED_PROP(Props, _InstancingRowOffset);
-                float4 lodCoord = float4(v.uvPoint.x, v.uvPoint.y + rowOffset, 0, 0);
-                    
+                float4 lodCoord = float4(input.uvPoint.x, input.uvPoint.y + rowOffset, 0, 0);
+
+
                 float4 pos = tex2Dlod(_PositionTex, lodCoord);
                 // float4 pos2 = tex2Dlod(_PositionTex2, lodCoord);
                 // pos = lerp(pos, pos2, _PositionRatio);
@@ -158,8 +175,8 @@ Shader "Particle City/Particle City URP GPU Instancing"
 
                 output.pos.y += _VolumeDeltaHeight * (max(0, pos.y - 80) / (250 - 80));
                 output.pos = mul(unity_ObjectToWorld, output.pos);
-                output.pos = expandToQuad(output.pos, pos, lodCoord.xy, v.uvSprite);
-                output.uvSprite = v.uvSprite;
+                output.pos = expandToQuad(output.pos, pos, lodCoord.xy, input.uvSprite);
+                output.uvSprite = input.uvSprite;
 
                 if (pos.y < _MinHeight || pos.y > _MaxHeight)
                 {
@@ -201,10 +218,13 @@ Shader "Particle City/Particle City URP GPU Instancing"
             }
 
             // Fragment Shader
-            half4 frag(Varyings IN) : SV_Target
+            half4 frag(Varyings input) : SV_Target
             {
                 float4 c = SAMPLE_TEXTURE2D(_SpriteTex, sampler_SpriteTex, input.uvSprite);
+
                 c *= input.color;
+                c = float4(1, 1, 1, 1);
+
 
 #if !defined(UNITY_COLORSPACE_GAMMA)
                 c.a = pow(c.a, 2.2);
