@@ -49,7 +49,7 @@ public class ParticleCityPrologueControl : MonoBehaviour
             meshRenderer.gameObject.name = "Sparkle";
         }
 
-        OnInterval();
+        //OnInterval();
     }
 
     private void OnIncrease()

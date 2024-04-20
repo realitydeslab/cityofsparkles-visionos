@@ -1,15 +1,27 @@
 {
+  "scopedRegistries": [
+      {
+          "name": "package.openupm.com",
+          "url": "https://package.openupm.com",
+          "scopes": [
+              "com.oss.leantween"
+          ]
+      }
+  ],
   "dependencies": {
+    "com.oss.leantween": "2.50.4",
     "com.unity.collab-proxy": "2.3.1",
     "com.unity.feature.development": "1.0.1",
+    "com.unity.formats.fbx": "4.2.1",
     "com.unity.postprocessing": "3.4.0",
+    "com.unity.render-pipelines.universal": "14.0.10",
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.timeline": "1.7.6",
     "com.unity.ugui": "1.0.0",
     "com.unity.visualscripting": "1.9.2",
     "com.unity.xr.hands": "1.3.0",
     "com.unity.xr.interaction.toolkit": "2.5.4",
-    "com.unity.xr.visionos": "1.1.4",
+    "com.unity.xr.visionos": "1.1.6",
     "com.yuchen.ingame-console": "https://github.com/yuchenz27/unity-ingame-console.git",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
