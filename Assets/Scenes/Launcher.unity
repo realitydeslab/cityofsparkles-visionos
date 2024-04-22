@@ -210,7 +210,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BaseScene: HandLocomotionTest
-  m_CityScene: Prologue
+  m_CityScene: CitySampleURP
 --- !u!4 &1960100819
 Transform:
   m_ObjectHideFlags: 0

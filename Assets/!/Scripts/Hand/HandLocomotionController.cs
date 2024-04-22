@@ -28,7 +28,7 @@ public class HandLocomotionController : MonoBehaviour
         }
     }
 
-    private bool m_IsActive = false;
+    [SerializeField] private bool m_IsActive = false;
 
     private bool m_IsFlying = false;
 

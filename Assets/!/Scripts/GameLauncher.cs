@@ -13,13 +13,13 @@ public class GameLauncher : MonoBehaviour
     {
         SceneManager.LoadScene(m_BaseScene);
 
-        m_CitySceneLoadOperation = SceneManager.LoadSceneAsync(m_CityScene, LoadSceneMode.Additive);
-        m_CitySceneLoadOperation.allowSceneActivation = true;
+        //m_CitySceneLoadOperation = SceneManager.LoadSceneAsync(m_CityScene, LoadSceneMode.Additive);
+        //m_CitySceneLoadOperation.allowSceneActivation = true;
     }
 
     private void Update()
     {
-        if (m_CitySceneLoadOperation.isDone)
-            SceneManager.UnloadSceneAsync("GameLauncher");
+        //if (m_CitySceneLoadOperation.isDone)
+        //    SceneManager.UnloadSceneAsync("GameLauncher");
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -13,7 +14,8 @@ public class ParticleCityGPUInstancingRenderer : MonoBehaviour
     private List<Matrix4x4> matrices;
     private MaterialPropertyBlock materialPropertyBlock;
 
-    void OnEnable() {
+    void OnEnable()
+    {
         matrices = new List<Matrix4x4>(GenParams.InstanceCount);
         for (int i = 0; i < GenParams.InstanceCount; i++)
         {
@@ -29,11 +31,27 @@ public class ParticleCityGPUInstancingRenderer : MonoBehaviour
         materialPropertyBlock = new MaterialPropertyBlock();
         materialPropertyBlock.SetFloatArray("_InstancingRowOffset", offsets);
 
-        RenderPipelineManager.beginCameraRendering -= drawWithCamera;
         RenderPipelineManager.beginCameraRendering += drawWithCamera;
+        //RenderPipelineManager.beginContextRendering += OnBeginContextRendering;
+        //RenderPipelineManager.beginFrameRendering += OnBeginFrameRendering;
     }
- 
-    void OnDisable() {
+
+    private void OnBeginFrameRendering(ScriptableRenderContext context, Camera[] cameras)
+    {
+        Debug.Log($"OnBeginFrameRendering: {cameras.Length}");
+        foreach (var camera in cameras)
+            drawWithCamera(context, camera);
+    }
+
+    private void OnBeginContextRendering(ScriptableRenderContext context, List<Camera> cameras)
+    {
+        Debug.Log($"OnBeginContextRendering: {cameras.Count}");
+        foreach (var camera in cameras)
+            drawWithCamera(context, camera);
+    }
+
+    void OnDisable()
+    {
         RenderPipelineManager.beginCameraRendering -= drawWithCamera;
     }
 
