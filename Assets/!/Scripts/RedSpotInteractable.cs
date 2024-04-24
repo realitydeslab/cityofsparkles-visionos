@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class RedSpotController : IInteractable
+public class RedSpotInteractable : IInteractable
 {
     public override float InteractRange => m_InteractRange;
 
     private float m_InteractRange = 0.15f;
 
-    private Transform m_Target;
+    private HandJointInteractor m_Target;
 
     private float m_Speed = 1.5f;
 
@@ -20,7 +20,7 @@ public class RedSpotController : IInteractable
             if (handJoint.HandJointID != UnityEngine.XR.Hands.XRHandJointID.IndexTip)
                 return;
 
-            m_Target = handJoint.transform;
+            m_Target = handJoint;
         }
     }
 
@@ -29,7 +29,14 @@ public class RedSpotController : IInteractable
         if (m_Target == null)
             return;
 
-        transform.position = Vector3.Lerp(transform.position, m_Target.position, m_Speed * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, m_Target.transform.position, m_Speed * Time.deltaTime);
+
+        float dist = Vector3.Distance(transform.position, m_Target.transform.position);
+        if (m_Target.Interactable == null && dist < InteractRange)
+            m_Target.Interactable = this;
+
+        if (m_Target.Interactable == this && dist > InteractRange)
+            m_Target.Interactable = null;
     }
 
     public override void Interact()

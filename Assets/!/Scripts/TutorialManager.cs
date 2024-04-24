@@ -11,7 +11,7 @@ public enum TutorialState
 
 public class TutorialManager : MonoBehaviour
 {
-    [SerializeField] private RedSpotController m_FirstSpot;
+    [SerializeField] private RedSpotInteractable m_FirstSpot;
 
     private TutorialState m_CurrentState = TutorialState.ReachingFirstSpot;
 }
