@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.XR.Hands;
+using System.Collections.Generic;
 
 public class HandLocomotionController : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class HandLocomotionController : MonoBehaviour
 
     [SerializeField] private float m_MaxSpeed = 1f;
 
+    [SerializeField] private bool m_IsActive = false;
+
+    [SerializeField] private InteractionManager m_InteractionManager;
+
     public bool IsActive
     {
         get => m_IsActive;
@@ -27,8 +32,6 @@ public class HandLocomotionController : MonoBehaviour
             m_IsActive = value;
         }
     }
-
-    [SerializeField] private bool m_IsActive = false;
 
     private bool m_IsFlying = false;
 
@@ -43,10 +46,12 @@ public class HandLocomotionController : MonoBehaviour
         Handedness oppositeHandedness = handedness == Handedness.Left ? Handedness.Right : Handedness.Left;
         if (newGesture == HandGesture.Pinching && m_HandGestureManager.HandGestures[oppositeHandedness] != HandGesture.Pinching)
         {
+            if (m_InteractionManager.HasInteractable())
+                return;
+
             // Start flying
             m_DirectionHandedness = oppositeHandedness;
             m_IsFlying = true;
-            Debug.Log("Start flying");
             return;
         }
 
@@ -56,7 +61,6 @@ public class HandLocomotionController : MonoBehaviour
             m_DirectionHandedness = Handedness.Invalid;
             m_IsFlying = false;
             m_Speed = 0f;
-            Debug.Log("Stop flying");
             return;
         }
     }
